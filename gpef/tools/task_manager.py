@@ -1,5 +1,6 @@
 import os
 import pickle
+import pandas as pd
 
 class TaskManager:
     def __init__(self, id):
@@ -19,7 +20,8 @@ class TaskManager:
         else:
             self.tasks_finished.clear()
             try:
-                self.tasks_remain = list_of_dict_from_csv(csv_path)
+                df = pd.read_csv(csv_path)
+                self.tasks_remain = list(df.T.to_dict().values())
             except Exception as e:
                 self.tasks_remain = []
                 print("TeskManager.generate_task_list().list_of_dict_from_csv().Exception: %s" % e)
