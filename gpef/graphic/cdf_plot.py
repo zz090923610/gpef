@@ -145,6 +145,9 @@ def cdf_plot(res_data_list, legend_list, title, save_path, xlabel="", ylabel="",
     add_legend += "))"
     print(add_legend)
     exec(add_legend)
+    axes = plt.gca()
+    # axes.set_xlim([xmin,xmax])
+    axes.set_ylim([0, 1])
     plt.savefig(save_path)
     if show_figure:
         plt.show()
