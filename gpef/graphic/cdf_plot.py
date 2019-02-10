@@ -21,14 +21,16 @@ EXAMPLE_CTRL_JSON = """######### EXAMPLE JSON: #########
             "csv_path": "./similarity_score.csv", 
             "col_name": "baseline", 
             "sample_range": [0, 1.002, 0.001], 
-            "count_out_of_range_data": true
+            "count_out_of_range_data": true,
+            "out_of_range_data_as": 0,
         }, 
         {
             "legend": "Tor", 
             "csv_path": "./similarity_score.csv", 
             "col_name": "torsocks", 
             "sample_range": [0, 1.002, 0.001], 
-            "count_out_of_range_data": true
+            "count_out_of_range_data": true,
+            "out_of_range_data_as": 0,
         }
     ]
 }
@@ -84,7 +86,7 @@ def set_plot_options():
 
 
 
-def data_prepare(df_path, col_name, sample_range, count_out_of_range_data=False):
+def data_prepare(df_path, col_name, sample_range, count_out_of_range_data=False, out_of_range_data_as=None):
     """
     sample_range = [start, end, interval], start can be left, end can be right if all data are included.
     count_out_of_range_data = True if out of range data are counted in Denominator
@@ -92,6 +94,8 @@ def data_prepare(df_path, col_name, sample_range, count_out_of_range_data=False)
     df = pd.read_csv(df_path)
     df = df[col_name]
     ori_len = len(df)
+    if out_of_range_data_as is not None:
+        df = df.fillna(float(out_of_range_data_as))
     df = df[df >= sample_range[0]] if sample_range[0] != 'left' else df
     df = df[df <= sample_range[1]] if sample_range[0] != 'right' else df
     new_len = len(df)
@@ -110,7 +114,7 @@ def parse_cmd(json_path):
     data_list = []
     legend_list = []
     for data_single in cmds['data']:
-        dl = data_prepare(data_single['csv_path'],data_single['col_name'],data_single['sample_range'], count_out_of_range_data=data_single['count_out_of_range_data'])
+        dl = data_prepare(data_single['csv_path'],data_single['col_name'],data_single['sample_range'], count_out_of_range_data=data_single['count_out_of_range_data'], out_of_range_data_as=data_single['out_of_range_data_as'])
         data_list.append(dl)
         legend_list.append(data_single['legend'])
     cdf_plot(data_list, legend_list, cmds['title'], cmds['save_path'], xlabel=cmds['x_label'], ylabel=cmds['y_label'], show_figure=cmds['show_figure'])
