@@ -13,5 +13,11 @@ setup(
     entry_points="""
     [console_scripts]
     cdf_plot = gpef.graphic.cdf_plot:main
+    gpef = gpef.cmd.cmd:main
     """,
+    install_requires=[
+        "matplotlib",
+        "pandas",
+        "paramiko"
+    ]
 )

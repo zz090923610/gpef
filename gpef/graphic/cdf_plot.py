@@ -1,13 +1,12 @@
-from itertools import cycle
-import matplotlib.pyplot as plt
-import matplotlib
-import numpy as np
-from matplotlib.lines import Line2D
-from matplotlib import rc
-import pandas as pd
-import os, sys
 import json
+import sys
+from itertools import cycle
 
+import matplotlib
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# noinspection SpellCheckingInspection
 EXAMPLE_CTRL_JSON = """######### EXAMPLE JSON: #########
 {
     "title": "cdf figure", 
@@ -37,6 +36,7 @@ EXAMPLE_CTRL_JSON = """######### EXAMPLE JSON: #########
 """
 
 
+# noinspection SpellCheckingInspection
 def set_plot_options():
     options = {
         # 'backend': 'PDF',
@@ -73,7 +73,7 @@ def set_plot_options():
         # turn on the following to embedd fonts; requires latex
         'ps.useafm': True,
         'pdf.use14corefonts': True,
-        'text.usetex' : True,
+        'text.usetex': True,
     }
     for option_key in options:
         matplotlib.rcParams[option_key] = options[option_key]
@@ -83,7 +83,6 @@ def set_plot_options():
         matplotlib.rcParams['figure.max_open_warning'] = 50
     if 'legend.ncol' in matplotlib.rcParams:
         matplotlib.rcParams['legend.ncol'] = 50
-
 
 
 def data_prepare(df_path, col_name, sample_range, count_out_of_range_data=False, out_of_range_data_as=None):
@@ -105,21 +104,27 @@ def data_prepare(df_path, col_name, sample_range, count_out_of_range_data=False,
     while threshold <= sample_range[1]:
         num_target = len(df[df <= threshold])
         res.append({"var": threshold, "cd": num_target / total_len})
-        threshold +=sample_range[2]
+        threshold += sample_range[2]
     return res
+
 
 def parse_cmd(json_path):
     with open(json_path, 'r') as f:
-        cmds = json.load(f)
+        commands = json.load(f)
     data_list = []
     legend_list = []
-    for data_single in cmds['data']:
-        dl = data_prepare(data_single['csv_path'],data_single['col_name'],data_single['sample_range'], count_out_of_range_data=data_single['count_out_of_range_data'], out_of_range_data_as=data_single['out_of_range_data_as'])
+    for data_single in commands['data']:
+        dl = data_prepare(data_single['csv_path'], data_single['col_name'], data_single['sample_range'],
+                          count_out_of_range_data=data_single['count_out_of_range_data'],
+                          out_of_range_data_as=data_single['out_of_range_data_as'])
         data_list.append(dl)
         legend_list.append(data_single['legend'])
-    cdf_plot(data_list, legend_list, cmds['title'], cmds['save_path'], xlabel=cmds['x_label'], ylabel=cmds['y_label'], show_figure=cmds['show_figure'])
+    cdf_plot(data_list, legend_list, commands['title'], commands['save_path'], xlabel=commands['x_label'],
+             ylabel=commands['y_label'],
+             show_figure=commands['show_figure'])
 
 
+# noinspection SpellCheckingInspection,PyUnusedLocal
 def cdf_plot(res_data_list, legend_list, title, save_path, xlabel="", ylabel="", show_figure=True):
     # Fixing random state for reproducibility
     set_plot_options()
@@ -156,6 +161,7 @@ def cdf_plot(res_data_list, legend_list, title, save_path, xlabel="", ylabel="",
     if show_figure:
         plt.show()
 
+
 def generate_example_json():
     print(EXAMPLE_CTRL_JSON)
 
@@ -168,5 +174,7 @@ def main():
         generate_example_json()
     else:
         parse_cmd(sys.argv[1])
+
+
 if __name__ == '__main__':
     main()
