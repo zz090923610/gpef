@@ -114,7 +114,13 @@ def parse_cmd(json_path):
     data_list = []
     legend_list = []
     for data_single in cmds['data']:
-        dl = data_prepare(data_single['csv_path'],data_single['col_name'],data_single['sample_range'], count_out_of_range_data=data_single['count_out_of_range_data'], out_of_range_data_as=data_single['out_of_range_data_as'])
+        print(data_single)
+        if "out_of_range_data_as" in data_single:
+            out_of_range_data_as = data_single['out_of_range_data_as']
+        else:
+            out_of_range_data_as = None
+        dl = data_prepare(data_single['csv_path'],data_single['col_name'],data_single['sample_range'], 
+            count_out_of_range_data=data_single['count_out_of_range_data'], out_of_range_data_as=out_of_range_data_as)
         data_list.append(dl)
         legend_list.append(data_single['legend'])
     cdf_plot(data_list, legend_list, cmds['title'], cmds['save_path'], xlabel=cmds['x_label'], ylabel=cmds['y_label'], show_figure=cmds['show_figure'])
