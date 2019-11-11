@@ -113,7 +113,7 @@ def parse_cmd(json_path):
         commands = json.load(f)
     data_list = []
     legend_list = []
-    for data_single in cmds['data']:
+    for data_single in commands['data']:
         print(data_single)
         if "out_of_range_data_as" in data_single:
             out_of_range_data_as = data_single['out_of_range_data_as']
