@@ -8,12 +8,13 @@ setup(
     description="General Purpose Experiment Framework",
     author='zhaozhang',
     author_email='zz156@georgetown.edu',
-    packages=['gpef.tools', 'gpef.graphic'],
+    packages=['gpef.tools', 'gpef.graphic', 'gpef.stat'],
     #install_requires=["matplotlib"],
     entry_points="""
     [console_scripts]
     cdf_plot = gpef.graphic.cdf_plot:main
     gpef = gpef.cmd.cmd:main
+    basic_stat = gpef.stat.basic_stat:main
     """,
     install_requires=[
         "matplotlib",
